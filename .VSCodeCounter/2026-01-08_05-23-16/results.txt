@@ -1,0 +1,130 @@
+Date : 2026-01-08 05:23:16
+Directory : d:\Programming\Projects\ChiChess\chess
+Total : 67 files,  2473 codes, 73 comments, 532 blanks, all 3078 lines
+
+Languages
++-----------------+------------+------------+------------+------------+------------+
+| language        | files      | code       | comment    | blank      | total      |
++-----------------+------------+------------+------------+------------+------------+
+| Java            |         56 |      1,959 |         37 |        474 |      2,470 |
+| Log             |          1 |        317 |          0 |          3 |        320 |
+| Batch           |          2 |         51 |         34 |         25 |        110 |
+| Gradle          |          2 |         46 |          0 |          7 |         53 |
+| Java Properties |          3 |         37 |          0 |         13 |         50 |
+| JSON            |          1 |         30 |          0 |          1 |         31 |
+| XML             |          1 |         28 |          2 |          5 |         35 |
+| Properties      |          1 |          5 |          0 |          4 |          9 |
++-----------------+------------+------------+------------+------------+------------+
+
+Directories
++--------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                                         | files      | code       | comment    | blank      | total      |
++--------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                                            |         67 |      2,473 |         73 |        532 |      3,078 |
+| . (Files)                                                                                                    |          5 |        102 |         34 |         36 |        172 |
+| gradle                                                                                                       |          1 |          7 |          0 |          1 |          8 |
+| gradle\wrapper                                                                                               |          1 |          7 |          0 |          1 |          8 |
+| logs                                                                                                         |          1 |        317 |          0 |          3 |        320 |
+| src                                                                                                          |         60 |      2,047 |         39 |        492 |      2,578 |
+| src\main                                                                                                     |         59 |      2,038 |         39 |        487 |      2,564 |
+| src\main\java                                                                                                |         55 |      1,950 |         37 |        469 |      2,456 |
+| src\main\java\kz                                                                                             |         55 |      1,950 |         37 |        469 |      2,456 |
+| src\main\java\kz\chitas                                                                                      |         55 |      1,950 |         37 |        469 |      2,456 |
+| src\main\java\kz\chitas\chess                                                                                |         55 |      1,950 |         37 |        469 |      2,456 |
+| src\main\java\kz\chitas\chess (Files)                                                                        |          1 |          9 |          0 |          5 |         14 |
+| src\main\java\kz\chitas\chess\config                                                                         |          6 |        186 |          2 |         52 |        240 |
+| src\main\java\kz\chitas\chess\controller                                                                     |          3 |        163 |         13 |         32 |        208 |
+| src\main\java\kz\chitas\chess\interfaces                                                                     |          2 |         18 |          1 |         17 |         36 |
+| src\main\java\kz\chitas\chess\model                                                                          |         25 |        564 |          3 |        144 |        711 |
+| src\main\java\kz\chitas\chess\model\auth                                                                     |         15 |        264 |          0 |         80 |        344 |
+| src\main\java\kz\chitas\chess\model\auth (Files)                                                             |          7 |        174 |          0 |         55 |        229 |
+| src\main\java\kz\chitas\chess\model\auth\DTO                                                                 |          8 |         90 |          0 |         25 |        115 |
+| src\main\java\kz\chitas\chess\model\logic                                                                    |          6 |        259 |          3 |         53 |        315 |
+| src\main\java\kz\chitas\chess\model\matchmaking                                                              |          4 |         41 |          0 |         11 |         52 |
+| src\main\java\kz\chitas\chess\repo                                                                           |          2 |         18 |          0 |         15 |         33 |
+| src\main\java\kz\chitas\chess\service                                                                        |          9 |        889 |         17 |        170 |      1,076 |
+| src\main\java\kz\chitas\chess\service\auth                                                                   |          4 |        266 |          1 |         43 |        310 |
+| src\main\java\kz\chitas\chess\service\logic                                                                  |          4 |        581 |         16 |        118 |        715 |
+| src\main\java\kz\chitas\chess\service\matchmaking                                                            |          1 |         42 |          0 |          9 |         51 |
+| src\main\java\kz\chitas\chess\utils                                                                          |          7 |        103 |          1 |         34 |        138 |
+| src\main\resources                                                                                           |          4 |         88 |          2 |         18 |        108 |
+| src\test                                                                                                     |          1 |          9 |          0 |          5 |         14 |
+| src\test\java                                                                                                |          1 |          9 |          0 |          5 |         14 |
+| src\test\java\kz                                                                                             |          1 |          9 |          0 |          5 |         14 |
+| src\test\java\kz\chitas                                                                                      |          1 |          9 |          0 |          5 |         14 |
+| src\test\java\kz\chitas\chess                                                                                |          1 |          9 |          0 |          5 |         14 |
++--------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++--------------------------------------------------------------------------------------------------------------+-----------------+------------+------------+------------+------------+
+| filename                                                                                                     | language        | code       | comment    | blank      | total      |
++--------------------------------------------------------------------------------------------------------------+-----------------+------------+------------+------------+------------+
+| d:\Programming\Projects\ChiChess\chess\.env                                                                  | Properties      |          5 |          0 |          4 |          9 |
+| d:\Programming\Projects\ChiChess\chess\build.gradle                                                          | Gradle          |         45 |          0 |          6 |         51 |
+| d:\Programming\Projects\ChiChess\chess\gradle\wrapper\gradle-wrapper.properties                              | Java Properties |          7 |          0 |          1 |          8 |
+| d:\Programming\Projects\ChiChess\chess\gradlew.bat                                                           | Batch           |         40 |         32 |         22 |         94 |
+| d:\Programming\Projects\ChiChess\chess\logs\cms.2026-01-08.0.log                                             | Log             |        317 |          0 |          3 |        320 |
+| d:\Programming\Projects\ChiChess\chess\run.bat                                                               | Batch           |         11 |          2 |          3 |         16 |
+| d:\Programming\Projects\ChiChess\chess\settings.gradle                                                       | Gradle          |          1 |          0 |          1 |          2 |
+| d:\Programming\Projects\ChiChess\chess\src\main\java\kz\chitas\chess\ChessApplication.java                   | Java            |          9 |          0 |          5 |         14 |
+| d:\Programming\Projects\ChiChess\chess\src\main\java\kz\chitas\chess\config\CHandshakeInterceptor.java       | Java            |         42 |          0 |         14 |         56 |
+| d:\Programming\Projects\ChiChess\chess\src\main\java\kz\chitas\chess\config\Config.java                      | Java            |         12 |          0 |          5 |         17 |
+| d:\Programming\Projects\ChiChess\chess\src\main\java\kz\chitas\chess\config\JwtFilter.java                   | Java            |         47 |          0 |         11 |         58 |
+| d:\Programming\Projects\ChiChess\chess\src\main\java\kz\chitas\chess\config\SecurityConfiguration.java       | Java            |         48 |          2 |         10 |         60 |
+| d:\Programming\Projects\ChiChess\chess\src\main\java\kz\chitas\chess\config\ValidationHandler.java           | Java            |         16 |          0 |          5 |         21 |
+| d:\Programming\Projects\ChiChess\chess\src\main\java\kz\chitas\chess\config\WebSocketConfig.java             | Java            |         21 |          0 |          7 |         28 |
+| d:\Programming\Projects\ChiChess\chess\src\main\java\kz\chitas\chess\controller\ChessWebSocketHandler.java   | Java            |         87 |          1 |         14 |        102 |
+| d:\Programming\Projects\ChiChess\chess\src\main\java\kz\chitas\chess\controller\MainController.java          | Java            |         25 |          0 |         10 |         35 |
+| d:\Programming\Projects\ChiChess\chess\src\main\java\kz\chitas\chess\controller\UserController.java          | Java            |         51 |         12 |          8 |         71 |
+| d:\Programming\Projects\ChiChess\chess\src\main\java\kz\chitas\chess\interfaces\ChessGameService.java        | Java            |          8 |          1 |          7 |         16 |
+| d:\Programming\Projects\ChiChess\chess\src\main\java\kz\chitas\chess\interfaces\RoomManager.java             | Java            |         10 |          0 |         10 |         20 |
+| d:\Programming\Projects\ChiChess\chess\src\main\java\kz\chitas\chess\model\auth\AuthCode.java                | Java            |          8 |          0 |          3 |         11 |
+| d:\Programming\Projects\ChiChess\chess\src\main\java\kz\chitas\chess\model\auth\DTO\CodeInput.java           | Java            |          8 |          0 |          3 |         11 |
+| d:\Programming\Projects\ChiChess\chess\src\main\java\kz\chitas\chess\model\auth\DTO\FingerprintInput.java    | Java            |          8 |          0 |          3 |         11 |
+| d:\Programming\Projects\ChiChess\chess\src\main\java\kz\chitas\chess\model\auth\DTO\LoginInput.java          | Java            |         12 |          0 |          3 |         15 |
+| d:\Programming\Projects\ChiChess\chess\src\main\java\kz\chitas\chess\model\auth\DTO\RegisterInput.java       | Java            |         16 |          0 |          3 |         19 |
+| d:\Programming\Projects\ChiChess\chess\src\main\java\kz\chitas\chess\model\auth\DTO\ResetPasswordInput.java  | Java            |         12 |          0 |          3 |         15 |
+| d:\Programming\Projects\ChiChess\chess\src\main\java\kz\chitas\chess\model\auth\DTO\SetNewPasswordInput.java | Java            |         12 |          0 |          3 |         15 |
+| d:\Programming\Projects\ChiChess\chess\src\main\java\kz\chitas\chess\model\auth\DTO\UserDTO.java             | Java            |         12 |          0 |          4 |         16 |
+| d:\Programming\Projects\ChiChess\chess\src\main\java\kz\chitas\chess\model\auth\DTO\VerifyCodeInput.java     | Java            |         10 |          0 |          3 |         13 |
+| d:\Programming\Projects\ChiChess\chess\src\main\java\kz\chitas\chess\model\auth\FACode.java                  | Java            |         33 |          0 |          9 |         42 |
+| d:\Programming\Projects\ChiChess\chess\src\main\java\kz\chitas\chess\model\auth\Fingerprint.java             | Java            |         33 |          0 |          8 |         41 |
+| d:\Programming\Projects\ChiChess\chess\src\main\java\kz\chitas\chess\model\auth\JWT.java                     | Java            |         11 |          0 |          4 |         15 |
+| d:\Programming\Projects\ChiChess\chess\src\main\java\kz\chitas\chess\model\auth\User.java                    | Java            |         36 |          0 |         13 |         49 |
+| d:\Programming\Projects\ChiChess\chess\src\main\java\kz\chitas\chess\model\auth\UserCreds.java               | Java            |         10 |          0 |          5 |         15 |
+| d:\Programming\Projects\ChiChess\chess\src\main\java\kz\chitas\chess\model\auth\UserPrincipal.java           | Java            |         43 |          0 |         13 |         56 |
+| d:\Programming\Projects\ChiChess\chess\src\main\java\kz\chitas\chess\model\logic\GameStatus.java             | Java            |         11 |          0 |          2 |         13 |
+| d:\Programming\Projects\ChiChess\chess\src\main\java\kz\chitas\chess\model\logic\GameType.java               | Java            |         10 |          0 |          3 |         13 |
+| d:\Programming\Projects\ChiChess\chess\src\main\java\kz\chitas\chess\model\logic\MessageType.java            | Java            |          7 |          0 |          2 |          9 |
+| d:\Programming\Projects\ChiChess\chess\src\main\java\kz\chitas\chess\model\logic\MoveRequest.java            | Java            |          8 |          0 |          3 |         11 |
+| d:\Programming\Projects\ChiChess\chess\src\main\java\kz\chitas\chess\model\logic\MoveResponse.java           | Java            |         14 |          0 |          3 |         17 |
+| d:\Programming\Projects\ChiChess\chess\src\main\java\kz\chitas\chess\model\logic\RoomState.java              | Java            |        209 |          3 |         40 |        252 |
+| d:\Programming\Projects\ChiChess\chess\src\main\java\kz\chitas\chess\model\matchmaking\JoinQueueRequest.java | Java            |         10 |          0 |          3 |         13 |
+| d:\Programming\Projects\ChiChess\chess\src\main\java\kz\chitas\chess\model\matchmaking\MessageType.java      | Java            |          6 |          0 |          2 |          8 |
+| d:\Programming\Projects\ChiChess\chess\src\main\java\kz\chitas\chess\model\matchmaking\QueueEntry.java       | Java            |         20 |          0 |          4 |         24 |
+| d:\Programming\Projects\ChiChess\chess\src\main\java\kz\chitas\chess\model\matchmaking\QueueStatus.java      | Java            |          5 |          0 |          2 |          7 |
+| d:\Programming\Projects\ChiChess\chess\src\main\java\kz\chitas\chess\repo\RstateRepo.java                    | Java            |          6 |          0 |          6 |         12 |
+| d:\Programming\Projects\ChiChess\chess\src\main\java\kz\chitas\chess\repo\UsersRepo.java                     | Java            |         12 |          0 |          9 |         21 |
+| d:\Programming\Projects\ChiChess\chess\src\main\java\kz\chitas\chess\service\auth\CookieService.java         | Java            |         44 |          1 |          7 |         52 |
+| d:\Programming\Projects\ChiChess\chess\src\main\java\kz\chitas\chess\service\auth\JWTService.java            | Java            |        100 |          0 |         16 |        116 |
+| d:\Programming\Projects\ChiChess\chess\src\main\java\kz\chitas\chess\service\auth\MyUserDetailsService.java  | Java            |         26 |          0 |          8 |         34 |
+| d:\Programming\Projects\ChiChess\chess\src\main\java\kz\chitas\chess\service\auth\UserService.java           | Java            |         96 |          0 |         12 |        108 |
+| d:\Programming\Projects\ChiChess\chess\src\main\java\kz\chitas\chess\service\logic\ChessService.java         | Java            |        328 |         12 |         60 |        400 |
+| d:\Programming\Projects\ChiChess\chess\src\main\java\kz\chitas\chess\service\logic\MessageRouter.java        | Java            |         92 |          0 |         23 |        115 |
+| d:\Programming\Projects\ChiChess\chess\src\main\java\kz\chitas\chess\service\logic\PostgresService.java      | Java            |         21 |          0 |         10 |         31 |
+| d:\Programming\Projects\ChiChess\chess\src\main\java\kz\chitas\chess\service\logic\RedisService.java         | Java            |        140 |          4 |         25 |        169 |
+| d:\Programming\Projects\ChiChess\chess\src\main\java\kz\chitas\chess\service\matchmaking\MMservice.java      | Java            |         42 |          0 |          9 |         51 |
+| d:\Programming\Projects\ChiChess\chess\src\main\java\kz\chitas\chess\utils\AnnoyingConstants.java            | Java            |         18 |          0 |          9 |         27 |
+| d:\Programming\Projects\ChiChess\chess\src\main\java\kz\chitas\chess\utils\GamePresetsLoader.java            | Java            |         32 |          0 |          8 |         40 |
+| d:\Programming\Projects\ChiChess\chess\src\main\java\kz\chitas\chess\utils\RandomStringUtil.java             | Java            |         18 |          0 |          5 |         23 |
+| d:\Programming\Projects\ChiChess\chess\src\main\java\kz\chitas\chess\utils\RoomFullException.java            | Java            |          7 |          0 |          2 |          9 |
+| d:\Programming\Projects\ChiChess\chess\src\main\java\kz\chitas\chess\utils\RoomNotFoundException.java        | Java            |          7 |          0 |          3 |         10 |
+| d:\Programming\Projects\ChiChess\chess\src\main\java\kz\chitas\chess\utils\SamePlayerException.java          | Java            |          7 |          0 |          3 |         10 |
+| d:\Programming\Projects\ChiChess\chess\src\main\java\kz\chitas\chess\utils\UriIdExtractor.java               | Java            |         14 |          1 |          4 |         19 |
+| d:\Programming\Projects\ChiChess\chess\src\main\resources\application-test.properties                        | Java Properties |         16 |          0 |          7 |         23 |
+| d:\Programming\Projects\ChiChess\chess\src\main\resources\application.properties                             | Java Properties |         14 |          0 |          5 |         19 |
+| d:\Programming\Projects\ChiChess\chess\src\main\resources\game-presets.json                                  | JSON            |         30 |          0 |          1 |         31 |
+| d:\Programming\Projects\ChiChess\chess\src\main\resources\logback-spring.xml                                 | XML             |         28 |          2 |          5 |         35 |
+| d:\Programming\Projects\ChiChess\chess\src\test\java\kz\chitas\chess\ChessApplicationTests.java              | Java            |          9 |          0 |          5 |         14 |
+| Total                                                                                                        |                 |      2,473 |         73 |        532 |      3,078 |
++--------------------------------------------------------------------------------------------------------------+-----------------+------------+------------+------------+------------+
