@@ -5,4 +5,6 @@ public enum MessageType {
     UPDATE,
     RESIGN,
     DRAW,
+    QUEUE,
+    QUEUE_STATE
 }

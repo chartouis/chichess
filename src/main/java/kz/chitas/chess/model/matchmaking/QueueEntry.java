@@ -17,7 +17,7 @@ public class QueueEntry {
     private long queueStart; // miliseconds
     private Long queueEnd; // nullable
     private String gameType;
-    private QueueStatus status;
+    private QueueState status;
     private String[] preferences; // List of random bools, prolly
     private long timeoutAt; // What even is timeoutAt? i kinda forgot
 }
