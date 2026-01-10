@@ -1,3 +1,5 @@
+package kz.chitas.chess.config;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
@@ -9,11 +11,13 @@ import java.util.List;
 @Configuration
 public class CorsConfig {
 
+    private final String FRONTEND_URL = System.getenv("FRONTEND_URL");
+
     @Bean
     public CorsFilter corsFilter() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.setAllowedOrigins(List.of("http://localhost:3000")); // front-end URL(s)
+        config.setAllowedOrigins(List.of(FRONTEND_URL)); // front-end URL(s)
         config.setAllowedHeaders(List.of("*"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setExposedHeaders(List.of("Authorization", "Content-Disposition"));
