@@ -21,8 +21,12 @@ public class ChessWebSocketHandler extends TextWebSocketHandler {
     }
 
     @Override
-    public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-        router.put(session);
+    public void afterConnectionEstablished(WebSocketSession session) {
+        try {
+            router.afterConnectionEstablished(session);
+        } catch (Exception e) {
+            log.error("Error handling message: {}", e.getMessage());
+        }
     }
 
     @Override
@@ -39,7 +43,7 @@ public class ChessWebSocketHandler extends TextWebSocketHandler {
         try {
             router.afterConnectionClosed(session);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Error handling message: {}", e.getMessage());
         }
     }
 }

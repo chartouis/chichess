@@ -19,6 +19,7 @@ import kz.chitas.chess.model.logic.MessageType;
 import kz.chitas.chess.model.logic.MoveRequest;
 import kz.chitas.chess.model.logic.MoveResponse;
 import kz.chitas.chess.model.logic.RoomState;
+import kz.chitas.chess.model.logic.SessionState;
 import kz.chitas.chess.model.matchmaking.JoinQueueRequest;
 import kz.chitas.chess.model.matchmaking.QueueEntry;
 import kz.chitas.chess.service.logic.ChessService;
@@ -34,7 +35,7 @@ public class MessageRouter {
     private final ObjectMapper objectMapper;
     private final MMservice matchmaker;
 
-    private HashMap<String, WebSocketSession> sessions;
+    private HashMap<String, WebSocketSession> sessions = new HashMap<>();
 
     // for games, after the game is found
     private final Map<UUID, Set<WebSocketSession>> rooms = new ConcurrentHashMap<>();
@@ -46,10 +47,9 @@ public class MessageRouter {
     }
 
     public void handleMessage(WebSocketSession session, TextMessage message) throws IOException {
-        UUID gameId = UriIdExtractor.extractGameId(session);
         String username = (String) session.getAttributes().get("username");
 
-        log.info("User: {} | Message received in room: {}", username, gameId);
+        log.info("User: {} | Message received", username);
 
         JsonNode node = objectMapper.readTree(message.getPayload());
         String rawType = node.has("type") ? node.get("type").asText() : null;
@@ -62,7 +62,10 @@ public class MessageRouter {
 
         try {
             MessageType type = MessageType.valueOf(rawType.toUpperCase());
-
+            if (!allowActionOnState(type, getState(session))) {
+                log.info("Impossible action by : {}", username);
+                return;
+            }
             switch (type) {
                 case MOVE:
                     handleMove(session, payload);
@@ -99,6 +102,8 @@ public class MessageRouter {
             return;
         }
         QueueEntry qe = matchmaker.enterQueue(jqr, username);
+        setState(session, SessionState.QUEUE);
+        log.info("User : {} in QUEUE", username);
         sendObject(username, qe);
         RoomState roomState = matchmaker.match(username);
         if (roomState != null) {
@@ -109,6 +114,8 @@ public class MessageRouter {
             WebSocketSession wsp2 = sessions.get(p2);
             wsp1.getAttributes().put("roomid", roomId);
             wsp2.getAttributes().put("roomid", roomId);
+            setState(wsp1, SessionState.INGAME);
+            setState(wsp2, SessionState.INGAME);
             addSession(roomId, wsp1);
             addSession(roomId, wsp2);
         }
@@ -214,6 +221,10 @@ public class MessageRouter {
 
         // Close room if game is finished
         if (chessService.checkAndPersist(state)) {
+            Set<WebSocketSession> set = rooms.get(state.getId());
+            for (WebSocketSession wss : set) {
+                setState(wss, SessionState.CONNECTED);
+            }
             closeRoom(gameId);
         }
     }
@@ -243,11 +254,15 @@ public class MessageRouter {
     }
 
     // Theoretically this allows only one websocket per user
-    public void put(WebSocketSession wss) {
+    public void put(WebSocketSession wss) throws IOException {
         String username = (String) wss.getAttributes().get("username");
         if (!sessions.containsKey(username)) {
             sessions.put(username, wss);
+            log.info("Put into sessions : {}", username);
             return;
+        } else {
+            wss.close();
+            log.info("Only one connection per user : {}", username);
         }
     }
 
@@ -268,12 +283,69 @@ public class MessageRouter {
     public void afterConnectionClosed(WebSocketSession session) throws IOException {
         String username = UriIdExtractor.getUsername(session);
         if (sessions.containsKey(username)) {
+            // session.getAttributes().put("state", SessionState.DISCONNECT);
             QueueEntry qe = matchmaker.leaveQueue(username);
             sendObject(username, qe);
             sessions.remove(username);
             log.info("Connection closed : {}", username);
+
+            if (isIngame(session)) {
+                UUID roomid = UriIdExtractor.extractGameId(session);
+                Set<WebSocketSession> set = rooms.get(roomid);
+                for (WebSocketSession wss : set) {
+                    if (UriIdExtractor.getUsername(wss).equals(username)) {
+                        set.remove(wss);
+                        log.info("Removed : {} from rooms", username);
+                    }
+                }
+            }
         } else {
             log.info("Connection failed to close, no session with such username");
         }
     }
+
+    public void afterConnectionEstablished(WebSocketSession session) throws IOException {
+        String username = UriIdExtractor.getUsername(session);
+        setState(session, SessionState.CONNECTED);
+        log.info("Connection established for : {}", username);
+        put(session);
+    }
+
+    private boolean allowActionOnState(MessageType type, SessionState state) {
+        switch (type) {
+            case MOVE, UPDATE, RESIGN, DRAW:
+                if (state == SessionState.INGAME)
+                    return true;
+                else
+                    return false;
+            case QUEUE, QUEUE_STATE:
+                if (state == SessionState.CONNECTED)
+                    return true;
+                else
+                    return false;
+            default:
+                return false;
+        }
+    }
+
+    private SessionState getState(WebSocketSession session) {
+        return (SessionState) session.getAttributes().get("state");
+    }
+
+    private void setState(WebSocketSession session, SessionState state) {
+        session.getAttributes().put("state", state);
+    }
+
+    private boolean isIngame(WebSocketSession session) {
+        return getState(session) == SessionState.INGAME;
+    }
+
+    // private boolean isConnected(WebSocketSession session) {
+    // return getState(session) == SessionState.CONNECTED;
+    // }
+
+    // private boolean isQueued(WebSocketSession session) {
+    // return getState(session) == SessionState.QUEUE;
+    // }
+
 }

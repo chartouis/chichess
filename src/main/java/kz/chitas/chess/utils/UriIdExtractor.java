@@ -13,7 +13,7 @@ public class UriIdExtractor {
     }
 
     public static UUID extractGameId(WebSocketSession session) {
-        return UUID.fromString((String) session.getAttributes().get("roomid"));
+        return (UUID) session.getAttributes().get("roomid");
     }
 
     public static UUID extractGameId(String uri) {

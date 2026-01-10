@@ -24,6 +24,10 @@ public class MainController {
 
     @GetMapping("/api/{gameId}")
     public ResponseEntity<RoomState> getGame(@PathVariable("gameId") String gameId) {
+        if (gameId == null || gameId.matches(
+                "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$")) {
+            return ResponseEntity.badRequest().build();
+        }
         RoomState state = chess.getGame(UUID.fromString(gameId));
         if (!state.equals(null)) {
             return ResponseEntity.ok(state);

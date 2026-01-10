@@ -12,7 +12,6 @@ import kz.chitas.chess.model.matchmaking.JoinQueueRequest;
 import kz.chitas.chess.model.matchmaking.QueueEntry;
 import kz.chitas.chess.model.matchmaking.QueueState;
 import kz.chitas.chess.service.logic.ChessService;
-import kz.chitas.chess.utils.RoomFullException;
 
 @Service
 public class MMservice {
@@ -56,15 +55,20 @@ public class MMservice {
         String gametype = qe.getGameType();
         for (String matcher : queues.keySet()) {
             QueueEntry matchqe = queues.get(matcher);
-            if (!gametype.equals(matchqe.getGameType()))
+            if (matcher.equals(username))
+                continue;
+            else if (!gametype.equals(matchqe.getGameType()))
                 continue;
             else if (qe.isRated() != matchqe.isRated())
                 continue;
 
-            if (random.nextBoolean())
-                return chessService.createRoom("server", matcher, username, gametype);
-            else
-                return chessService.createRoom("server", username, matcher, gametype);
+            if (random.nextBoolean()) {
+                RoomState rm = chessService.createRoom("server", matcher, "", gametype);
+                return chessService.joinRoom(rm.getId(), username);
+            } else {
+                RoomState rm = chessService.createRoom("server", "", matcher, gametype);
+                return chessService.joinRoom(rm.getId(), username);
+            }
 
             // add preferences check in future
         }
