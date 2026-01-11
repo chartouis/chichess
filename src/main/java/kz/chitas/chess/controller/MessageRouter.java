@@ -3,6 +3,7 @@ package kz.chitas.chess.controller;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -83,16 +84,46 @@ public class MessageRouter {
                     handleQueue(session, payload);
                     break;
                 case QUEUE_STATE:
+                    break;
+                case RECONNECT:
+                    handleReconnect(session);
+                    break;
             }
         } catch (IllegalArgumentException e) {
             log.warn("Unknown message type: {}", rawType);
         }
     }
 
+    private void handleReconnect(WebSocketSession session) throws IOException {
+        String username = UriIdExtractor.getUsername(session);
+        if (username == null) {
+            log.warn("Invalid queue request: missing required data");
+            return;
+        }
+
+        Set<String> roomids = chessService.getRoomsByUsername(username);
+        if (roomids.isEmpty()) {
+            log.info("Reconnect FAILED by : {} no active games");
+            return;
+        }
+        UUID roomId = UUID.fromString(roomids.iterator().next());
+        WebSocketSession ws = sessions.get(username);
+        ws.getAttributes().put("roomid", roomId);
+        setState(ws, SessionState.INGAME);
+        addSession(roomId, ws);
+        handleUpdate(session);
+        log.info("Reconnect SUCCESSFUL by {}", username);
+    }
+
     private void handleQueue(WebSocketSession session, JsonNode payload) throws IOException {
         String username = UriIdExtractor.getUsername(session);
         if (username == null || payload == null) {
             log.warn("Invalid queue request: missing required data");
+            return;
+        }
+
+        if (isPlaying(username)) {
+            log.info("Only one active game per user : {}", username);
             return;
         }
         JoinQueueRequest jqr = objectMapper.treeToValue(payload, JoinQueueRequest.class);
@@ -108,16 +139,15 @@ public class MessageRouter {
         RoomState roomState = matchmaker.match(username);
         if (roomState != null) {
             UUID roomId = roomState.getId();
-            String p1 = roomState.getWhite();
-            String p2 = roomState.getBlack();
-            WebSocketSession wsp1 = sessions.get(p1);
-            WebSocketSession wsp2 = sessions.get(p2);
-            wsp1.getAttributes().put("roomid", roomId);
-            wsp2.getAttributes().put("roomid", roomId);
-            setState(wsp1, SessionState.INGAME);
-            setState(wsp2, SessionState.INGAME);
-            addSession(roomId, wsp1);
-            addSession(roomId, wsp2);
+
+            for (String player : List.of(roomState.getWhite(), roomState.getBlack())) {
+                WebSocketSession ws = sessions.get(player);
+                ws.getAttributes().put("roomid", roomId);
+                setState(ws, SessionState.INGAME);
+                addSession(roomId, ws);
+                handleUpdate(ws);
+            }
+
         }
     }
 
@@ -318,13 +348,21 @@ public class MessageRouter {
                     return true;
                 else
                     return false;
-            case QUEUE, QUEUE_STATE:
+            case QUEUE, QUEUE_STATE, RECONNECT:
                 if (state == SessionState.CONNECTED)
                     return true;
                 else
                     return false;
             default:
                 return false;
+        }
+    }
+
+    private boolean isPlaying(String username) {
+        if (chessService.getRoomsByUsername(username).isEmpty()) {
+            return false;
+        } else {
+            return true;
         }
     }
 

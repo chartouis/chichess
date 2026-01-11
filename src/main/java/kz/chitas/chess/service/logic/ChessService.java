@@ -409,4 +409,8 @@ public class ChessService implements RoomManager, ChessGameService {
         return postgresService.get(gameUuid);
     }
 
+    public Set<String> getRoomsByUsername(String username) {
+        log.info("Set of rooms of : {}", username);
+        return redisService.getRoomsByUsername(username);
+    }
 }

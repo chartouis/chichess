@@ -55,6 +55,14 @@ public class RedisService {
             // Creation time (UTC)
             jedis.hset(key, "createdAt",
                     roomState.getCreatedAt() != null ? roomState.getCreatedAt().toString() : Instant.now().toString());
+
+            // ---- PLAYER INDEXING ----
+            if (roomState.getWhite() != null && !roomState.getWhite().isEmpty()) {
+                jedis.sadd("user:" + roomState.getWhite() + ":rooms", roomState.getId().toString());
+            }
+            if (roomState.getBlack() != null && !roomState.getBlack().isEmpty()) {
+                jedis.sadd("user:" + roomState.getBlack() + ":rooms", roomState.getId().toString());
+            }
         }
     }
 
@@ -121,14 +129,24 @@ public class RedisService {
 
     public void deleteRoom(String roomId) {
         try (Jedis jedis = jedisPool.getResource()) {
-            jedis.del("room:" + roomId);
+            String key = "room:" + roomId;
+
+            String white = jedis.hget(key, "white");
+            String black = jedis.hget(key, "black");
+
+            if (white != null && !white.isEmpty()) {
+                jedis.srem("user:" + white + ":rooms", roomId);
+            }
+            if (black != null && !black.isEmpty()) {
+                jedis.srem("user:" + black + ":rooms", roomId);
+            }
+
+            jedis.del(key);
         }
     }
 
     public void deleteRoom(UUID roomId) {
-        try (Jedis jedis = jedisPool.getResource()) {
-            jedis.del("room:" + roomId);
-        }
+        deleteRoom(roomId.toString());
     }
 
     public void deleteAllRooms() {
@@ -147,8 +165,12 @@ public class RedisService {
     }
 
     public boolean hasRoomId(UUID roomId) {
+        return hasRoomId(roomId.toString());
+    }
+
+    public Set<String> getRoomsByUsername(String username) {
         try (Jedis jedis = jedisPool.getResource()) {
-            return jedis.exists("room:" + roomId.toString());
+            return jedis.smembers("user:" + username + ":rooms");
         }
     }
 

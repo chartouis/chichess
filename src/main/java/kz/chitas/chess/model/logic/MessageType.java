@@ -6,5 +6,6 @@ public enum MessageType {
     RESIGN,
     DRAW,
     QUEUE,
-    QUEUE_STATE
+    QUEUE_STATE,
+    RECONNECT
 }
