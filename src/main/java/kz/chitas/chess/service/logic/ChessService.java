@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -83,7 +84,7 @@ public class ChessService implements RoomManager, ChessGameService {
 
         String playerToMove = board.getSideToMove() == Side.WHITE ? state.getWhite() : state.getBlack();
 
-        if (player.equals(playerToMove) && board.isMoveLegal(move, true)
+        if (player.equals(playerToMove) && isMoveLegal(board, move)
                 && state.getStatus() == GameStatus.ONGOING) {
 
             GameType type = settings.get(state.getGameType());
@@ -249,6 +250,17 @@ public class ChessService implements RoomManager, ChessGameService {
             }
         }
         log.info("------------------LOADING FINISHED------------------");
+
+    }
+
+    private boolean isMoveLegal(Board board, Move move) {
+        List<Move> legalMoves = board.legalMoves();
+        for (Move legalMove : legalMoves) {
+            if (legalMove.equals(move)) {
+                return true;
+            }
+        }
+        return false;
 
     }
 
