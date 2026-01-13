@@ -84,6 +84,7 @@ public class MessageRouter {
                     handleQueue(session, payload);
                     break;
                 case QUEUE_STATE:
+                    handleQueueState(session);
                     break;
                 case RECONNECT:
                     handleReconnect(session);
@@ -201,6 +202,19 @@ public class MessageRouter {
         }
 
         sendResponseAndCheckEnd(gameId, valid);
+    }
+
+    private void handleQueueState(WebSocketSession session) throws IOException {
+        String username = UriIdExtractor.getUsername(session);
+        if (username == null) {
+            log.warn("Invalid draw request: missing required data");
+            return;
+        }
+        QueueEntry qe = matchmaker.getQueueEntry(username);
+        String json = objectMapper.writeValueAsString(qe);
+        if (session.isOpen()) {
+            session.sendMessage(new TextMessage(json));
+        }
     }
 
     private void handleUpdate(WebSocketSession session) throws IOException {
