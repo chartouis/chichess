@@ -31,6 +31,7 @@ public class RoomState {
     private GameStatus status;
     private String winner;
     private String gameType;
+    private boolean isRated;
 
     // Timer fields in milliseconds
     private long remainingWhite;
@@ -40,7 +41,7 @@ public class RoomState {
     // Creation timestamp in UTC
     private Instant createdAt = Instant.now();
 
-    // NEW FIELD — time when the game actually started
+    // time when the game actually started
     private Instant gameStartedAt;
 
     public boolean hasPlayer(String username) {
@@ -139,6 +140,7 @@ public class RoomState {
         this.lastMoveEpoch = builder.lastMoveEpoch;
         this.createdAt = builder.createdAt != null ? builder.createdAt : Instant.now();
         this.gameStartedAt = builder.gameStartedAt;
+        this.isRated = builder.isRated;
     }
 
     public static class Builder {
@@ -158,6 +160,7 @@ public class RoomState {
         private long lastMoveEpoch;
         private Instant createdAt;
         private Instant gameStartedAt;
+        private boolean isRated;
 
         public Builder id(String id) {
             this.id = UUID.fromString(id);
@@ -247,5 +250,11 @@ public class RoomState {
         public RoomState build() {
             return new RoomState(this);
         }
+
+        public Builder isRated(boolean isRated) {
+            this.isRated = isRated;
+            return this;
+        }
+
     }
 }

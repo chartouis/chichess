@@ -37,6 +37,7 @@ public class ChessService implements RoomManager, ChessGameService {
 
     private final RedisService redisService;
     private final PostgresService postgresService;
+    private final static int K_FACTOR = Integer.parseInt(System.getenv("K_FACTOR"));
 
     public ChessService(RedisService redisService, GamePresetsLoader gLoader, PostgresService postgresService) {
         this.redisService = redisService;
@@ -360,9 +361,11 @@ public class ChessService implements RoomManager, ChessGameService {
     }
 
     // if persisted true, otherwise false
+    // updates rating on game end
     public boolean checkAndPersist(RoomState state) {
         GameStatus status = state.getStatus();
         if (status != GameStatus.WAITING && status != GameStatus.ONGOING) {
+            updateRating(state);
             persistFromRedis(state);
             return true;
         }
@@ -412,5 +415,49 @@ public class ChessService implements RoomManager, ChessGameService {
     public Set<String> getRoomsByUsername(String username) {
         log.info("Set of rooms of : {}", username);
         return redisService.getRoomsByUsername(username);
+    }
+
+    public void updateRating(RoomState state) {
+        if (!state.isRated())
+            return;
+
+        String winner = state.getWinner();
+        if (winner == null || winner.isBlank())
+            return;
+
+        boolean draw = state.getStatus() == GameStatus.DRAW;
+        String white = state.getWhite();
+        String black = state.getBlack();
+
+        int whiteRating = postgresService.getRating(white);
+        int blackRating = postgresService.getRating(black);
+
+        double expectedWhite = probability(blackRating, whiteRating);
+        double expectedBlack = probability(whiteRating, blackRating);
+
+        double scoreWhite;
+        double scoreBlack;
+
+        if (draw) {
+            scoreWhite = 0.5;
+            scoreBlack = 0.5;
+        } else if (winner.equals(white)) {
+            scoreWhite = 1.0;
+            scoreBlack = 0.0;
+        } else {
+            scoreWhite = 0.0;
+            scoreBlack = 1.0;
+        }
+
+        int newWhite = (int) Math.round(whiteRating + K_FACTOR * (scoreWhite - expectedWhite));
+        int newBlack = (int) Math.round(blackRating + K_FACTOR * (scoreBlack - expectedBlack));
+        log.info("updated elo {} : {}   ||   {} : {}", white, newWhite, black, newBlack);
+        postgresService.setRating(white, newWhite);
+        postgresService.setRating(black, newBlack);
+    }
+
+    // probability of winning of the player with rating 2
+    private double probability(int rating1, int rating2) {
+        return 1.0 / (1 + Math.pow(10, (rating1 - rating2) / 400.0));
     }
 }
