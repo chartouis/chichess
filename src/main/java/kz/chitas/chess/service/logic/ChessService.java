@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.github.bhlangonijr.chesslib.Board;
@@ -24,6 +25,7 @@ import kz.chitas.chess.interfaces.ChessGameService;
 import kz.chitas.chess.interfaces.RoomManager;
 import kz.chitas.chess.model.logic.GameStatus;
 import kz.chitas.chess.model.logic.GameType;
+import kz.chitas.chess.model.logic.PageResponse;
 import kz.chitas.chess.model.logic.RoomState;
 import kz.chitas.chess.utils.GamePresetsLoader;
 import kz.chitas.chess.utils.RoomFullException;
@@ -459,5 +461,11 @@ public class ChessService implements RoomManager, ChessGameService {
     // probability of winning of the player with rating 2
     private double probability(int rating1, int rating2) {
         return 1.0 / (1 + Math.pow(10, (rating1 - rating2) / 400.0));
+    }
+
+    public PageResponse<RoomState> getGameHistoryByUsername(String username, int page, int size) {
+        log.info("{} Fetched history of the player : {}",
+                SecurityContextHolder.getContext().getAuthentication().getName(), username);
+        return getGameHistoryByUsername(username, page, size);
     }
 }

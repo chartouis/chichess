@@ -1,12 +1,13 @@
 package kz.chitas.chess.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import kz.chitas.chess.model.logic.PageResponse;
 import kz.chitas.chess.model.logic.RoomState;
 import kz.chitas.chess.service.logic.ChessService;
 
-import java.util.Set;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
@@ -36,13 +37,21 @@ public class MainController {
         return ResponseEntity.notFound().build();
     }
 
-    @GetMapping("/api/history/{username}")
-    public ResponseEntity<Set<String>> getRoomsByUsername(@PathVariable("username") String username) {
-        if (username == null || username.length() == 0) {
-            return ResponseEntity.badRequest().build();
+    @GetMapping("/api/history")
+    public PageResponse<RoomState> getHistory(
+            @RequestParam String username,
+            @RequestParam int page,
+            @RequestParam int size) {
+        if (username == null || username.isBlank()) {
+            throw new IllegalArgumentException("username is required");
         }
-        Set<String> roomids = chess.getRoomsByUsername(username);
-        return ResponseEntity.ok(roomids);
+        if (page < 0)
+            page = 0;
+        if (size <= 0 || size > 100)
+            size = 20; // default bounds
+
+        return chess.getGameHistoryByUsername(username, page, size);
+
     }
 
 }

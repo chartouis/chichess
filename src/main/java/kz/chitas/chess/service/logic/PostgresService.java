@@ -2,9 +2,13 @@ package kz.chitas.chess.service.logic;
 
 import java.util.UUID;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import kz.chitas.chess.model.auth.User;
+import kz.chitas.chess.model.logic.PageResponse;
 import kz.chitas.chess.model.logic.RoomState;
 import kz.chitas.chess.repo.RstateRepo;
 import kz.chitas.chess.repo.UsersRepo;
@@ -38,6 +42,20 @@ public class PostgresService {
 
     public boolean has(UUID id) {
         return repo.existsById(id);
+    }
+
+    public PageResponse<RoomState> getGameHistoryByUsername(String username, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<RoomState> roomPage = repo.findByUsername(username, pageable);
+
+        return new PageResponse<>(
+                roomPage.getContent(),
+                roomPage.getNumber(),
+                roomPage.getSize(),
+                roomPage.getTotalElements(),
+                roomPage.getTotalPages(),
+                roomPage.hasNext(),
+                roomPage.hasPrevious());
     }
 
 }
