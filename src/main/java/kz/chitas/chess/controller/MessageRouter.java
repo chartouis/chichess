@@ -89,10 +89,41 @@ public class MessageRouter {
                 case RECONNECT:
                     handleReconnect(session);
                     break;
+                case SPECTATE:
+                    handleSpectate(session, payload);
+                    break;
+                default:
+                    break;
             }
         } catch (IllegalArgumentException e) {
             log.warn("Unknown message type: {}", rawType);
         }
+    }
+
+    private void handleSpectate(WebSocketSession session, JsonNode payload) throws IOException {
+        if (payload == null) {
+            log.warn("Invalid queue request: missing required data");
+            return;
+        }
+        // The username of the user to spectate, not the spectator
+        String spectator = UriIdExtractor.getUsername(session);
+        String username = payload.get("username").asText();
+        if (username == null || spectator == null) {
+            log.warn("Invalid queue request: missing required data");
+            return;
+        }
+        Set<String> roomids = chessService.getRoomsByUsername(username);
+        if (roomids.isEmpty()) {
+            log.info("Spectate FAILED by : {} no active games");
+            return;
+        }
+        UUID roomId = UUID.fromString(roomids.iterator().next());
+        session.getAttributes().put("roomid", roomId);
+        setState(session, SessionState.SPECTATING);
+        addSession(roomId, session);
+        handleUpdate(session);
+        log.info("{} is SPECTATING -> {}", spectator, username);
+
     }
 
     private void handleReconnect(WebSocketSession session) throws IOException {
@@ -327,13 +358,12 @@ public class MessageRouter {
     public void afterConnectionClosed(WebSocketSession session) throws IOException {
         String username = UriIdExtractor.getUsername(session);
         if (sessions.containsKey(username)) {
-            // session.getAttributes().put("state", SessionState.DISCONNECT);
             QueueEntry qe = matchmaker.leaveQueue(username);
             sendObject(username, qe);
             sessions.remove(username);
             log.info("Connection closed : {}", username);
 
-            if (isIngame(session)) {
+            if (isIngame(session) || isSpectating(session)) {
                 UUID roomid = UriIdExtractor.extractGameId(session);
                 Set<WebSocketSession> set = rooms.get(roomid);
                 for (WebSocketSession wss : set) {
@@ -357,12 +387,17 @@ public class MessageRouter {
 
     private boolean allowActionOnState(MessageType type, SessionState state) {
         switch (type) {
-            case MOVE, UPDATE, RESIGN, DRAW:
+            case UPDATE:
+                if (state == SessionState.SPECTATING || state == SessionState.INGAME)
+                    return true;
+                else
+                    return false;
+            case MOVE, RESIGN, DRAW:
                 if (state == SessionState.INGAME)
                     return true;
                 else
                     return false;
-            case QUEUE, QUEUE_STATE, RECONNECT:
+            case QUEUE, QUEUE_STATE, RECONNECT, SPECTATE:
                 if (state == SessionState.CONNECTED)
                     return true;
                 else
@@ -390,6 +425,10 @@ public class MessageRouter {
 
     private boolean isIngame(WebSocketSession session) {
         return getState(session) == SessionState.INGAME;
+    }
+
+    private boolean isSpectating(WebSocketSession session) {
+        return getState(session) == SessionState.SPECTATING;
     }
 
     // private boolean isConnected(WebSocketSession session) {
