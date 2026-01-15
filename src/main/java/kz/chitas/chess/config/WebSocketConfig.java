@@ -11,6 +11,7 @@ public class WebSocketConfig implements WebSocketConfigurer {
 
     private final ChessWebSocketHandler chessWebSocketHandler;
     private final CHandshakeInterceptor interceptor;
+    private final String FRONTEND_URL = System.getenv("FRONTEND_URL");
 
     public WebSocketConfig(ChessWebSocketHandler chessWebSocketHandler, CHandshakeInterceptor interceptor) {
         this.chessWebSocketHandler = chessWebSocketHandler;
@@ -20,8 +21,8 @@ public class WebSocketConfig implements WebSocketConfigurer {
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
         registry
-                .addHandler(chessWebSocketHandler, "/api/ws/game/**")
+                .addHandler(chessWebSocketHandler, "/api/ws/game")
                 .addInterceptors(interceptor)
-                .setAllowedOrigins("*");
+                .setAllowedOrigins(FRONTEND_URL);
     }
 }
