@@ -63,10 +63,10 @@ public class MMservice {
                 continue;
 
             if (random.nextBoolean()) {
-                RoomState rm = chessService.createRoom("server", matcher, "", gametype);
+                RoomState rm = chessService.createRoom("server", matcher, "", gametype, qe.isRated());
                 return chessService.joinRoom(rm.getId(), username);
             } else {
-                RoomState rm = chessService.createRoom("server", "", matcher, gametype);
+                RoomState rm = chessService.createRoom("server", "", matcher, gametype, qe.isRated());
                 return chessService.joinRoom(rm.getId(), username);
             }
 

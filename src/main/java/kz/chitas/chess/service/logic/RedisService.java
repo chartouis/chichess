@@ -39,6 +39,7 @@ public class RedisService {
             jedis.hset(key, "winner", nvl(roomState.getWinner()));
             jedis.hset(key, "drawOfferedBy", nvl(roomState.getDrawOfferedBy()));
             jedis.hset(key, "gameType", nvl(roomState.getGameType()));
+            jedis.hset(key, "isRated", String.valueOf(roomState.isRated()));
 
             // Timer fields
             jedis.hset(key, "remainingWhite", String.valueOf(roomState.getRemainingWhite()));
@@ -88,6 +89,7 @@ public class RedisService {
             String timestamps = jedis.hget(key, "timestamps");
             String createdAt = jedis.hget(key, "createdAt");
             String gameStartedAt = jedis.hget(key, "gameStartedAt");
+            String isRated = jedis.hget(key, "isRated");
 
             return new RoomState.Builder()
                     .id(roomId)
@@ -107,6 +109,8 @@ public class RedisService {
                     .createdAt(createdAt != null && !createdAt.isEmpty() ? Instant.parse(createdAt) : Instant.now())
                     .gameStartedAt(
                             gameStartedAt != null && !gameStartedAt.isEmpty() ? Instant.parse(gameStartedAt) : null)
+                    .isRated(isRated != null && Boolean.parseBoolean(isRated))
+
                     .build();
         }
     }
