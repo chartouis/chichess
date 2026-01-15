@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -74,10 +75,10 @@ public class UserController {
     }
 
     @GetMapping("/api/search/{query}")
-    public List<User> searchUsers(@PathVariable String query) {
+    public List<String> searchUsers(@PathVariable String query) {
         if (query == null || query.isBlank()) {
             return List.of(); // empty list for invalid input
         }
-        return userService.searchByUsername(query);
+        return userService.searchByUsername(query).stream().map(User::getUsername).collect(Collectors.toList());
     }
 }
