@@ -15,6 +15,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -104,5 +105,9 @@ public class UserService {
         cook.setCookie(tok, response, "ACCESS-TOKEN-JWTAUTH", "/api", ACCESS_TOKEN_AGE);
         log.info("Token refreshed for user: {}", username);
         return new JWT("SUCCESS");
+    }
+
+    public List<User> searchByUsername(String query) {
+        return repo.searchByUsername(query);
     }
 }
