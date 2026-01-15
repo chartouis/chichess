@@ -458,6 +458,14 @@ public class ChessService implements RoomManager, ChessGameService {
         postgresService.setRating(black, newBlack);
     }
 
+    // with check
+    public int getRating(String username) {
+        if (!postgresService.existsByUsername(username)) {
+            return 0;
+        }
+        return postgresService.getRating(username);
+    }
+
     // probability of winning of the player with rating 2
     private double probability(int rating1, int rating2) {
         return 1.0 / (1 + Math.pow(10, (rating1 - rating2) / 400.0));

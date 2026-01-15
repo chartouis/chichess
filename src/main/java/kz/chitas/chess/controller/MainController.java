@@ -54,4 +54,17 @@ public class MainController {
 
     }
 
+    @GetMapping("/api/rating/{username}")
+    public ResponseEntity<Integer> getRatingByUsername(@PathVariable("username") String username) {
+        if (username == null || username.isBlank()) {
+            return ResponseEntity.badRequest().build();
+        }
+        int rating = chess.getRating(username);
+        if (rating == 0) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        return ResponseEntity.ok(rating);
+    }
+
 }

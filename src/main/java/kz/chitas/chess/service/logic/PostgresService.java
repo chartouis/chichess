@@ -38,10 +38,15 @@ public class PostgresService {
     public void setRating(String username, int newRating) {
         User user = urepo.findByUsername(username).orElseThrow();
         user.setRating(newRating);
+        urepo.save(user);
     }
 
     public boolean has(UUID id) {
         return repo.existsById(id);
+    }
+
+    public boolean existsByUsername(String username) {
+        return urepo.existsByUsername(username);
     }
 
     public PageResponse<RoomState> getGameHistoryByUsername(String username, int page, int size) {

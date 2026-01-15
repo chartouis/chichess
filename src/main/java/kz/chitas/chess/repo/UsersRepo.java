@@ -17,13 +17,14 @@ public interface UsersRepo extends JpaRepository<User, Long> {
 
     Optional<User> findByEmail(String email);
 
-    int findRatingByUsername(String username);
-
     boolean existsByEmail(String email);
 
     boolean existsByUsername(String username);
 
     @Query("SELECT u FROM User u WHERE LOWER(u.username) LIKE LOWER(CONCAT('%', :query, '%'))")
     List<User> searchByUsername(@Param("query") String query);
+
+    @Query("select u.rating from User u where u.username = :username")
+    Integer findRatingByUsername(@Param("username") String username);
 
 }
