@@ -26,7 +26,7 @@ public class MainController {
 
     @GetMapping("/api/{gameId}")
     public ResponseEntity<RoomState> getGame(@PathVariable("gameId") String gameId) {
-        if (gameId == null || gameId.matches(
+        if (gameId == null || !gameId.matches(
                 "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$")) {
             return ResponseEntity.badRequest().build();
         }
@@ -38,19 +38,19 @@ public class MainController {
     }
 
     @GetMapping("/api/history")
-    public PageResponse<RoomState> getHistory(
+    public ResponseEntity<PageResponse<RoomState>> getHistory(
             @RequestParam String username,
             @RequestParam int page,
             @RequestParam int size) {
         if (username == null || username.isBlank()) {
-            throw new IllegalArgumentException("username is required");
+            return ResponseEntity.badRequest().build();
         }
         if (page < 0)
             page = 0;
         if (size <= 0 || size > 100)
             size = 20; // default bounds
 
-        return chess.getGameHistoryByUsername(username, page, size);
+        return ResponseEntity.ok(chess.getGameHistoryByUsername(username, page, size));
 
     }
 
