@@ -17,6 +17,7 @@ import kz.chitas.chess.service.logic.ChessService;
 public class MMservice {
     ChessService chessService;
     Random random = new Random();
+    private final int RATING_RANGE = Integer.parseInt(System.getenv("RATING_RANGE"));
     LinkedHashMap<String, QueueEntry> queues = new LinkedHashMap<>();
 
     public MMservice(ChessService chessService) {
@@ -61,6 +62,14 @@ public class MMservice {
                 continue;
             else if (qe.isRated() != matchqe.isRated())
                 continue;
+
+            if (qe.isRated()) {
+                int uRating = chessService.getRating(username);
+                int mRating = chessService.getRating(matcher);
+                if (!(mRating >= uRating - RATING_RANGE && mRating <= uRating + RATING_RANGE)) {
+                    continue;
+                }
+            }
 
             if (random.nextBoolean()) {
                 RoomState rm = chessService.createRoom("server", matcher, "", gametype, qe.isRated());
