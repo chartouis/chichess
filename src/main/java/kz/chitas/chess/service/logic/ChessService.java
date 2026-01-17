@@ -183,6 +183,7 @@ public class ChessService {
             throw new SamePlayerException(roomState, white);
         }
         redisService.saveRoomState(roomState);
+        postgresService.save(roomState);
         log.info("Room created: {}", roomId);
         return roomState;
     }
