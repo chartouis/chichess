@@ -1,0 +1,9 @@
+.vscode/
+build/
+logs/
+.env
+.gitattributes
+.gitignore
+Dockerfile
+run.bat
+.gradle/

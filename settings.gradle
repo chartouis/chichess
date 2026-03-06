@@ -1,1 +1,9 @@
+pluginManagement {
+    repositories {
+        mavenCentral()      
+        maven { url 'https://jitpack.io' }  
+        gradlePluginPortal()  
+    }
+}
+
 rootProject.name = 'chess'
