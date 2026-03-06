@@ -110,4 +110,11 @@ public class UserService {
     public List<User> searchByUsername(String query) {
         return repo.searchByUsername(query);
     }
+
+    public Long getUserId(String username) {
+        if (repo.existsByUsername(username)) {
+            return repo.findIdByUsername(username);
+        }
+        return 0L;
+    }
 }

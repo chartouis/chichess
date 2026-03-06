@@ -21,10 +21,12 @@ import redis.clients.jedis.JedisPool;
 public class RedisService {
 
     private final JedisPool jedisPool;
+    private final String host = System.getenv("REDIS_HOST");
+    private final int port = Integer.parseInt(System.getenv("REDIS_PORT"));
 
     public RedisService() {
         log.info("Starting Redis-Service");
-        this.jedisPool = new JedisPool("localhost", 6379);
+        this.jedisPool = new JedisPool(host, port);
     }
 
     public void saveRoomState(RoomState roomState) {
