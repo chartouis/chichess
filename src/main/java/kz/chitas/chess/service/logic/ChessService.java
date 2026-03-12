@@ -387,13 +387,9 @@ public class ChessService {
             return;
         }
 
-        if (!isActive(state)) {
+        if (!checkAndPersist(state)) {
             redisService.saveRoomState(state);
-            persistFromRedis(state);
-            return;
         }
-        redisService.saveRoomState(state);
-
     }
 
     public boolean isActive(RoomState state) {
