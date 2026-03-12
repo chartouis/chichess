@@ -356,8 +356,7 @@ public class ChessService {
     // if persisted true, otherwise false
     // updates rating on game end
     public boolean checkAndPersist(RoomState state) {
-        GameStatus status = state.getStatus();
-        if (status != GameStatus.WAITING && status != GameStatus.ONGOING) {
+        if (!isActive(state)) {
             updateRating(state);
             persistFromRedis(state);
             return true;
