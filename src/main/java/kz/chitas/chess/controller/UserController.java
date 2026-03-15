@@ -70,6 +70,12 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/api/logout")
+    public ResponseEntity<Void> logout(HttpServletResponse response) {
+        userService.logout(response);
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping("/api/search/{query}")
     public List<String> searchUsers(@PathVariable String query) {
         if (query == null || query.isBlank()) {

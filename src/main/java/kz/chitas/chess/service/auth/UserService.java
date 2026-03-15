@@ -117,4 +117,9 @@ public class UserService {
         }
         return 0L;
     }
+
+    public void logout(HttpServletResponse response) {
+        cook.setCookie("", response, "ACCESS-TOKEN-JWTAUTH", "/api", 1);
+        cook.setCookie("", response, "REFRESH-TOKEN-JWTAUTH", "/refresh", 1);
+    }
 }
