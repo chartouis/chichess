@@ -18,8 +18,8 @@ public class CookieService {
         ResponseCookie cookie = ResponseCookie.from(name, jwtToken)
                 .path(path)
                 .httpOnly(true)
-                .secure(false)
-                // .sameSite("None") uncomment on deploy
+                .secure(true)
+                .sameSite("Strict")
                 .maxAge(age)
                 .build();
 
