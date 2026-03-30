@@ -3,7 +3,6 @@ package kz.chitas.chess.service.logic;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -108,7 +107,7 @@ public class ChessService {
                 state.setStatus(status);
 
                 if (!playerToMove.equals(state.getDrawOfferedBy())) {
-                    state.setDrawOfferedBy(null);
+                    state.setDrawOfferedBy("");
                 }
 
                 if (status == GameStatus.CHECKMATE) {
@@ -282,8 +281,9 @@ public class ChessService {
         if (state == null) {
             return false;
         }
-        if (!Objects.equals(state.getDrawOfferedBy(), username)
-                && state.hasPlayer(username) && !Objects.equals(state.getDrawOfferedBy(), null)) {
+        if (state.getDrawOfferedBy() != null && !state.getDrawOfferedBy().equals("")
+                && !state.getDrawOfferedBy().equals(username)
+                && state.hasPlayer(username)) {
             closeRoom(state, GameStatus.DRAW, null);
             return true;
         }
@@ -295,8 +295,7 @@ public class ChessService {
         if (state == null) {
             return false;
         }
-        if (Objects.equals(state.getDrawOfferedBy(), null)
-                && state.hasPlayer(username)) {
+        if (state.getDrawOfferedBy() != null && state.getDrawOfferedBy().equals("") && state.hasPlayer(username)) {
             state.setDrawOfferedBy(username);
             redisService.saveRoomState(state);
             return true;
