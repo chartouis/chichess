@@ -6,7 +6,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import kz.chitas.chess.model.logic.PageResponse;
 import kz.chitas.chess.model.logic.RoomState;
+import kz.chitas.chess.model.matchmaking.ActiveInQueue;
 import kz.chitas.chess.service.logic.ChessService;
+import kz.chitas.chess.service.matchmaking.MMservice;
 
 import java.util.UUID;
 
@@ -66,4 +68,10 @@ public class MainController {
 
         return ResponseEntity.ok(rating);
     }
+
+    @GetMapping("/api/active")
+    public ResponseEntity<ActiveInQueue> getActiveInQueue() {
+        return ResponseEntity.ok(MMservice.getActive());
+    }
+
 }

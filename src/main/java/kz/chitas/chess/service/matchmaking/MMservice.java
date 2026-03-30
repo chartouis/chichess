@@ -1,13 +1,17 @@
 package kz.chitas.chess.service.matchmaking;
 
 import java.time.Instant;
+import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import kz.chitas.chess.model.logic.RoomState;
+import kz.chitas.chess.model.matchmaking.ActiveInQueue;
 import kz.chitas.chess.model.matchmaking.JoinQueueRequest;
 import kz.chitas.chess.model.matchmaking.QueueEntry;
 import kz.chitas.chess.model.matchmaking.QueueState;
@@ -18,7 +22,9 @@ public class MMservice {
     ChessService chessService;
     Random random = new Random();
     private final int RATING_RANGE = Integer.parseInt(System.getenv("RATING_RANGE"));
-    LinkedHashMap<String, QueueEntry> queues = new LinkedHashMap<>();
+    // Username, QueueEntry
+    private final Map<String, QueueEntry> queues = Collections.synchronizedMap(new LinkedHashMap<>());
+    private static volatile ActiveInQueue active = new ActiveInQueue();
 
     public MMservice(ChessService chessService) {
         this.chessService = chessService;
@@ -88,6 +94,37 @@ public class MMservice {
         if (queues.containsKey(username))
             return queues.get(username);
         return null;
+    }
+
+    @Scheduled(fixedRate = 10000)
+    private void countInQueue() {
+        ActiveInQueue aiq = new ActiveInQueue();
+        synchronized (queues) {
+            for (QueueEntry queue : queues.values()) {
+                String type = queue.getGameType();
+                if (queue.isRated()) {
+                    switch (type) {
+                        case "blitz" -> aiq.setRated_blitz(aiq.getRated_blitz() + 1);
+                        case "bullet" -> aiq.setRated_bullet(aiq.getRated_bullet() + 1);
+                        case "classical" -> aiq.setRated_classical(aiq.getRated_classical() + 1);
+                        case "rapid" -> aiq.setRated_rapid(aiq.getRated_rapid() + 1);
+                    }
+                } else {
+                    switch (type) {
+                        case "blitz" -> aiq.setCasual_blitz(aiq.getCasual_blitz() + 1);
+                        case "bullet" -> aiq.setCasual_bullet(aiq.getCasual_bullet() + 1);
+                        case "classical" -> aiq.setCasual_classical(aiq.getCasual_classical() + 1);
+                        case "rapid" -> aiq.setCasual_rapid(aiq.getCasual_rapid() + 1);
+                    }
+                }
+            }
+        }
+
+        active = aiq;
+    }
+
+    public static ActiveInQueue getActive() {
+        return active;
     }
 
 }
